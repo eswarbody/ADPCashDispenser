@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: ADP - Change For Bill
+  description: Change Bill API.
+  version: 1.0.0
+  contact:
+    name: ADP DL
+    email: adp@adp.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org
+servers:
+  - url: /api
+paths:
+  /v1/json/change:
+    get:
+      tags:
+        - ADP change bills api
+      summary: Get Change
+      operationId: getChange
+      parameters:
+        - name: X-Auth-Token
+          in: header
+          required: false
+          description: SessionId
+          schema:
+            type: string
+        - name: bill
+          in: query
+          required: true
+          description: bill to get change
+          schema:
+            type: integer
+            format: int64
+        - name: coinsUtilization
+          in: query
+          required: false
+          description: coins utilization for least or most , default will be least
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retreives change for Given Bill
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Change'
+          headers:
+            X-Auth-Token:
+              $ref: '#/components/headers/xAuthToken'
+        '422':
+          description: Request could not be processed due to invalid request
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Request could not be processed due to System Unavailable
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+components:
+  headers:
+    xAuthToken:
+      schema:
+        type: string
+        example: 93333-adfd-454-sdfdf-2342344
+  schemas:
+    Change:
+      type: object
+      description: Change obj with
+      properties:
+        bill:
+          type: integer
+          format: int64
+        1Cent:
+          type: integer
+          format: int64
+        5Cent:
+          type: integer
+          format: int64
+        10Cent:
+          type: integer
+          format: int64
+        25Cent:
+          type: integer
+          format: int64
+    ErrorResponse:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    
